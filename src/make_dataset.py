@@ -24,7 +24,7 @@ def process_adata(adata, g2v_embeddings):
         Q.append(q)
     Q = np.array(Q)
 
-    X = sc.read_h5ad('sc_training.h5ad').X.toarray()
+    X = adata.X.toarray()
     Y = [LABEL_ENCODING[y] for y in adata.obs['state']]
     Y = tf.keras.utils.to_categorical(Y, num_classes=max(Y) + 1)
     Y = np.array(Y)

@@ -41,7 +41,7 @@ def train_model(x_train, q_train, y_train,
     for epoch in range(0, epochs):
         for _ in range(steps_per_epoch):
             batch = next(train_gen)
-            batch['z'] = np.random.normal(scale=.5, size=(batch_size, 64))
+            batch['z'] = np.random.normal(scale=.5, size=(batch_size, 64)).astype('floa32')
             train_step(**batch)
         val = evaluate(predict, perturbations_test, condition_test,
                        y_test, g2v_embeddings)

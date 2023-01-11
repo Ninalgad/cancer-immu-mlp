@@ -41,7 +41,7 @@ pip install tensorflow-gpu==2.9.2
 
 then download the Gene2vec embeddings with 
 ```
-wget -O data/embeddings/gene2vec_dim_200_iter_9_w2v.txt https://github.com/jingcheng-du/Gene2vec/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt
+wget -O data/embeddings/gene2vec_dim_200_iter_9_w2v.txt https://github.com/jingcheng-du/Gene2vec/raw/master/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt
 ```
 
 
@@ -70,8 +70,8 @@ cancer-immu-mlp
 │   ├── run_kfold_training.py
 │   ├── training_utils.py
 │   └── run_single_training.py
-├── README.md          <- The top-level README for developers using this project.
-├── requirements.txt   <- The requirements file for reproducing the analysis environment
+├── README.md          <- The top-level README for using this project.
+├── requirements.txt   <- List of all dependencies
 ├── Makefile           <- Makefile with commands like `make requirements`
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
 ```

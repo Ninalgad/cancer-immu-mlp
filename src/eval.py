@@ -3,7 +3,7 @@ import numpy as np
 
 def sample_dist(predict_func, perturbation_emb, n_samples):
     p = np.array([perturbation_emb for _ in range(n_samples)])
-    z = np.random.normal(scale=1., size=(n_samples, 64))
+    z = np.random.normal(scale=1., size=(n_samples, 64)).astype('floa32')
 
     dist = predict_func(p, z)
     dist = dist.numpy().sum(0)
