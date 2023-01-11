@@ -32,7 +32,6 @@ def main(
     if test_mode:
         genes = ['Ets1', 'Fosb', 'Mafk', 'Stat3']
         submission_name = "test_output.csv"
-    genes = [g.lower() for g in genes]
 
     logger.info(f"Loading embeddings from {embedding_path}")
     g2v_embeddings = load_embeddings(embedding_path)
@@ -46,8 +45,8 @@ def main(
         return model.call(q, z)
 
     # call to 'create' the model
-    model.call(np.zeros((n_samples, 200), 'float32'),
-               np.zeros((n_samples, 64), 'float32'))
+    model(np.zeros((n_samples, 200), 'float32'),
+          np.zeros((n_samples, 64), 'float32'))
 
     logger.info("Predicting labels")
     predictions = np.zeros((len(genes), 5), 'float32')
@@ -55,7 +54,7 @@ def main(
         h5_path = model_dir / f"model-{i}.h5"
         model.load_weights(h5_path)
         for j, g in enumerate(genes):
-            dist = sample_dist(predict, g2v_embeddings[g], n_samples)
+            dist = sample_dist(predict, g2v_embeddings[g.lower()], n_samples)
             dist = dist / len(genes)
             predictions[j] = predictions[j] + dist
 

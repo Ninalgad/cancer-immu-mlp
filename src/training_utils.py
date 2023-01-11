@@ -23,7 +23,7 @@ def train_model(x_train, q_train, y_train,
     @tf.function
     def train_step(q, z, x, y):
         with tf.GradientTape() as tape:
-            pred_y, pred_x = model.call(q, z)
+            pred_y, pred_x = model(q, z)
             loss = loss_function(y, pred_y, x, pred_x)
         gradients = tape.gradient(loss, model.trainable_variables)
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -31,7 +31,7 @@ def train_model(x_train, q_train, y_train,
 
     @tf.function
     def predict(q, z):
-        return model.call(q, z)
+        return model(q, z)
 
     train_gen = create_datagen(x_train, q_train, y_train, batch_size)
 

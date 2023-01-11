@@ -62,9 +62,9 @@ def main(
                                 y_test, perturb_test, conditions[test_index],
                                 g2v_embeddings,
                                 h5_name=f, batch_size=128, epochs=n_epochs)
-        logger.info(f"Trained model {i}, Validation metric: {val_score}")
+        logger.info(f"Trained model {i}, Validation metric: {round(val_score, 4)}")
 
-    logger.info(f"Completed Training models to {model_dir}")
+    logger.success(f"Completed Training models to {model_dir}")
 
 
 if __name__ == "__main__":
