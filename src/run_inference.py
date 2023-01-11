@@ -10,6 +10,9 @@ from src.model import SimpNet
 from src.eval import sample_dist
 
 
+np.random.seed(0)
+
+
 def main(
         test_mode: bool = typer.Option(
             False, help="Predict the test genes, otherwise predict the validation genes"
@@ -55,7 +58,6 @@ def main(
         model.load_weights(h5_path)
         for j, g in enumerate(genes):
             dist = sample_dist(predict, g2v_embeddings[g.lower()], n_samples)
-            dist = dist / len(genes)
             predictions[j] = predictions[j] + dist
 
     # normalise the predictions

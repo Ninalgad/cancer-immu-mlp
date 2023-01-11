@@ -9,6 +9,9 @@ from src.g2v import load_embeddings
 from src.training_utils import train_model
 
 
+np.random.seed(0)
+
+
 def main(
         model_dir: Path = typer.Option(
             "./data/processed", help="Directory to save the output model weights in npy format"

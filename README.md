@@ -85,8 +85,8 @@ The solution was run on a Google colab notebook
 - GPU: Tesla T4
 
 Both training and inference were run on GPU.
-- Training time: ~ 6 hours
-- Inference time: ~ 15 mins
+- Training time: ~ 12 mins
+- Inference time: ~ 10 sec
 
 # Run training
 
