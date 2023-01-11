@@ -8,7 +8,6 @@ import numpy as np
 from src.g2v import load_embeddings
 from src.model import SimpNet
 from src.eval import sample_dist
-from make_dataset import LABEL_ENCODING
 
 
 def main(
@@ -40,11 +39,15 @@ def main(
 
     logger.info("Creating model")
     tf.keras.backend.clear_session()
-    model = SimpNet(128 + 64)
+    model = SimpNet(128)
 
     @tf.function
     def predict(q, z):
         return model.call(q, z)
+
+    # call to 'create' the model
+    model.call(np.zeros((n_samples, 200), 'float32'),
+               np.zeros((n_samples, 64), 'float32'))
 
     logger.info("Predicting labels")
     predictions = np.zeros((len(genes), 5), 'float32')
@@ -54,16 +57,17 @@ def main(
         for j, g in enumerate(genes):
             dist = sample_dist(predict, g2v_embeddings[g], n_samples)
             dist = dist / len(genes)
-            predictions[i] = predictions[i] + dist
+            predictions[j] = predictions[j] + dist
 
     # normalise the predictions
     for i in range(len(genes)):
         predictions[i] = predictions[i] / predictions[i].sum()
 
     # generate submission
+    columns = ['progenitor', 'effector', 'terminal', 'cycling', 'other']
     submission = {"genes": genes}
-    for i in LABEL_ENCODING:
-        submission[LABEL_ENCODING[i]] = predictions[:, i]
+    for i, c in enumerate(columns):
+        submission[c] = predictions[:, i]
     submission = pd.DataFrame(submission)
 
     submission.to_csv(submission_save_dir / submission_name, index=False)
@@ -72,4 +76,3 @@ def main(
 
 if __name__ == "__main__":
     typer.run(main)
-

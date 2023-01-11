@@ -41,13 +41,15 @@ def train_model(x_train, q_train, y_train,
     for epoch in range(0, epochs):
         for _ in range(steps_per_epoch):
             batch = next(train_gen)
-            batch['z'] = np.random.normal(scale=.5, size=(batch_size, 64)).astype('floa32')
+            batch['z'] = np.random.normal(scale=.5, size=(batch_size, 64))
+            batch['z'] = batch['z'].astype('float32')
             train_step(**batch)
         val = evaluate(predict, perturbations_test, condition_test,
                        y_test, g2v_embeddings)
         gc.collect()
         if val < best_val:
-            model.save_weights(h5_name + '.h5')
+            model.save_weights(str(h5_name) + '.h5')
             best_val = val
 
     return best_val
+
