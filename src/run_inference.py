@@ -10,9 +10,6 @@ from src.model import SimpNet
 from src.eval import sample_dist
 
 
-np.random.seed(0)
-
-
 def main(
         test_mode: bool = typer.Option(
             False, help="Predict the test genes, otherwise predict the validation genes"
@@ -25,6 +22,9 @@ def main(
         ),
         embedding_path: Path = typer.Option(
             "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
+        ),
+        n_models: int = typer.Option(
+            8, help="Number of models to use in the model-dir"
         ),
         n_samples: int = typer.Option(
             1000, help="Path to the Gene2Vec embeddings"
@@ -53,11 +53,12 @@ def main(
 
     logger.info("Predicting labels")
     predictions = np.zeros((len(genes), 5), 'float32')
-    for i in range(10):
+    for i in range(n_models):
         h5_path = model_dir / f"model-{i}.h5"
         model.load_weights(h5_path)
         for j, g in enumerate(genes):
             dist = sample_dist(predict, g2v_embeddings[g.lower()], n_samples)
+            dist = dist / len(genes)
             predictions[j] = predictions[j] + dist
 
     # normalise the predictions

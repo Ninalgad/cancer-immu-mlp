@@ -1,7 +1,6 @@
 from loguru import logger
 from pathlib import Path
 import typer
-from sklearn.model_selection import KFold
 import numpy as np
 
 from src.make_dataset import make_dataset
@@ -9,7 +8,22 @@ from src.g2v import load_embeddings
 from src.training_utils import train_model
 
 
-np.random.seed(0)
+def validation_subset(conditions):
+    v = np.array(conditions)
+    v, c = np.unique(v, return_counts=True)
+    q25, q75 = np.quantile(c, 0.25), np.quantile(c, 0.75)
+
+    subset = []
+    for gene, count in zip(v, c):
+        if (q25 < count) and (count < q75):
+            subset.append(gene)
+    return subset
+
+
+def batch(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
 
 
 def main(
@@ -23,20 +37,23 @@ def main(
             "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
         ),
         n_folds: int = typer.Option(
-            10, help="Number of folds, Must be at least 2"
+            8, help="Number of folds/models, Must be at least 2"
+        ),
+        n_epochs: int = typer.Option(
+            50, help="Number of training epochs, Must be at least 1"
         ),
         random_state: int = typer.Option(
-            758625225, help="Controls the randomness of each fold"
+            758625225, help="Controls the randomness of each fold and noise"
         ),
         debug: bool = typer.Option(
             False, help="Run on a small subset of the data and a two folds for debugging"
         )
 ):
-    n_epochs = 50
+    np.random.seed(random_state)
+
     if debug:
         logger.info("Running in debug mode")
         n_epochs = 1
-        n_folds = 2
 
     logger.info(f"Loading embeddings from {embedding_path}")
     g2v_embeddings = load_embeddings(embedding_path)
@@ -45,13 +62,15 @@ def main(
     Q, X, Y, conditions = make_dataset(
         features_dir / 'sc_training.h5ad', g2v_embeddings
     )
-    unique_perturbations = np.array(sorted(conditions.unique()))
+    unique_perturb = np.array(sorted(conditions.unique()))
+    val_perturbations = validation_subset(conditions)
+    np.random.shuffle(val_perturbations)
 
-    logger.info("Training models")
-    kf = KFold(n_splits=n_folds, shuffle=True, random_state=random_state)
-    for i, (train_index, test_index) in enumerate(kf.split(unique_perturbations)):
-        perturb_train = unique_perturbations[train_index]
-        perturb_test = unique_perturbations[test_index]
+    test_batch_size = max(1, len(val_perturbations) // n_folds)
+    test_perturb_gen = batch(val_perturbations, test_batch_size)
+    logger.info(f"Training {n_folds} models")
+    for (i, perturb_test) in enumerate(test_perturb_gen):
+        perturb_train = [p for p in unique_perturb if p not in perturb_test]
 
         train_index = np.array([p in perturb_train for p in conditions])
         test_index = np.logical_not(train_index)
@@ -65,7 +84,7 @@ def main(
                                 y_test, perturb_test, conditions[test_index],
                                 g2v_embeddings,
                                 h5_name=f, batch_size=128, epochs=n_epochs)
-        logger.info(f"Trained model {i}, Validation metric: {round(val_score, 4)}")
+        logger.info(f"Trained model {i}, Validation metric: {val_score}")
 
     logger.success(f"Completed Training models to {model_dir}")
 

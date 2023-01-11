@@ -49,7 +49,7 @@ The structure of the directory before running training or inference should be:
 ```
 cancer-immu-mlp
 ├── data
-│   ├── processed      <- Output of training
+│   ├── processed      <- Output of training & inference
 │   ├── embeddings     <- Gene2vec embeddings
 │   │   └── gene2vec_dim_200_iter_9_w2v.txt
 │   └── raw            <- The original data files
@@ -57,23 +57,43 @@ cancer-immu-mlp
 │       ├── clone_information.csv
 │       ├── guide_abundance.csv
 │       └── scRNA_ATAC.h5
-├── models             <- Pre-trained model weights in h5 format
-│   ├── s0.h5
-│   ├── s1.h5
-│   ...
 ├── src                <- Source code for use in this project.
 │   ├── __init__.py    <- Makes src a Python module
 │   ├── make_dataset.py
+│   ├── eval.py
+│   ├── g2v.py
 │   ├── run_inference.py
 │   ├── model.py
 │   ├── loss.py
 │   ├── run_kfold_training.py
-│   ├── training_utils.py
-│   └── run_single_training.py
+│   └── training_utils.py
 ├── README.md          <- The top-level README for using this project.
 ├── requirements.txt   <- List of all dependencies
 ├── Makefile           <- Makefile with commands like `make requirements`
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+```
+
+# Run training
+
+To run training: `python src/run_kfold_training.py`. 
+
+```
+$ python src/run_kfold_training.py --help
+```
+
+
+# Run inference
+
+To run inference on the VALIDATION genes: `python src/run_inference.py` \
+By default, predictions will be saved out to `data/processed/validation_output.csv`. 
+
+
+To run inference on the TEST genes: `python src/run_inference.py --test-mode` \
+By default, predictions will be saved out to `data/processed/test_output.csv`.
+
+
+```
+$ python src/run_inference.py --help
 ```
 
 # Hardware
@@ -88,30 +108,15 @@ Both training and inference were run on GPU.
 - Training time: ~ 12 mins
 - Inference time: ~ 10 sec
 
-# Run training
+# Gene2vec
+repo: [https://github.com/jingcheng-du/Gene2vec](https://github.com/jingcheng-du/Gene2vec)
+MIT License: [jingcheng-du/Gene2vec/LICENSE](https://github.com/jingcheng-du/Gene2vec/blob/master/LICENSE)
+<p>Gene2vec (Du et al., 2018) is a set of high-dimensional embeddings of human genes, where 
+embeddings are closer together if they are often expressed together. Here we feed these embedding alongside random noise
+to a deep neural network.</p>
 
-To run training using from the command line: `python src/run_kfold_training.py`. 
-
-```
-$ python src/run_kfold_training.py --help
-```
-
-
-# Run inference
-
-Trained model weights can be downloaded from this Google folder: https://drive.google.com/drive/folders/1ujIuxB5R62ik-5-5wg9gp5uvmR8qh57z?usp=sharing
-
-Ensure the weights are located in the `models` folder.
-
-
-To run inference from the command line: `python src/run_inference.py`
-
-```
-$ python src/run_inference.py --help
-```
-
-By default, predictions will be saved out to `data/processed/submission.csv`.
 
 --------
+# References:
+Du, J., Jia, P., Dai, Y., Tao, C., Zhao, Z., & Zhi, D. (2018). Gene2vec: distributed representation of genes based on co-expression. BMC Genomics, 20.
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
