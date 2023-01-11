@@ -2,70 +2,72 @@ from loguru import logger
 import pandas as pd
 from pathlib import Path
 import typer
-from src.model import get_model
-from src.make_dataset import make_dataset
+import tensorflow as tf
+import numpy as np
+
+from src.g2v import load_embeddings
+from src.model import SimpNet
+from src.eval import sample_dist
+from make_dataset import LABEL_ENCODING
 
 
 def main(
-    model_dir: Path = typer.Option(
-        "./models/", help="Directory of the saved model weights"
-    ),
-    features_path: Path = typer.Option(
-        "./data/raw/", help="Path to the raw features"
-    ),
-    submission_save_path: Path = typer.Option(
-        "./data/processed/submission.csv", help="Path to save the generated submission"
-    ),
-    submission_format_path: Path = typer.Option(
-        "./data/raw/submission_format.csv", help="Path to save the submission format csv"
-    ),
-    metadata_path: Path = typer.Option(
-        "./data/raw/metadata.csv", help="Path to the metadata csv"
-    ),
-    debug: bool = typer.Option(
-        False, help="Run on a small subset of the data and a single model for debugging"
-    )
+        test_mode: bool = typer.Option(
+            False, help="Predict the test genes, otherwise predict the validation genes"
+        ),
+        submission_save_dir: Path = typer.Option(
+            "./data/processed", help="Predict the test genes, otherwise predict the validation genes"
+        ),
+        model_dir: Path = typer.Option(
+            "./data/processed", help="Directory to save the output model weights"
+        ),
+        embedding_path: Path = typer.Option(
+            "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
+        ),
+        n_samples: int = typer.Option(
+            1000, help="Path to the Gene2Vec embeddings"
+        )
 ):
-    n_rows = None
-    n_models = 10
-    if debug:
-        logger.info("Running in debug mode")
-        n_rows = 10
-        n_models = 1
+    genes = ['Aqr', 'Bach2', 'Bhlhe40']
+    submission_name = "validation_output.csv"
+    if test_mode:
+        genes = ['Ets1', 'Fosb', 'Mafk', 'Stat3']
+        submission_name = "test_output.csv"
+    genes = [g.lower() for g in genes]
 
-    logger.info(f"Loading feature data from {features_path}")
-    df_meta = pd.read_csv(metadata_path, index_col="sample_id")
-
-    df_meta_test = df_meta[df_meta.split != 'train']
-    paths_df = str(features_path) + "/" + df_meta_test.features_path.astype('str')
-    paths_df = paths_df.iloc[:n_rows]
-
-    logger.info(f"Processing feature data. size: {paths_df.shape[0]}")
-    X = make_dataset(paths_df)
+    logger.info(f"Loading embeddings from {embedding_path}")
+    g2v_embeddings = load_embeddings(embedding_path)
 
     logger.info("Creating model")
-    model = get_model()
+    tf.keras.backend.clear_session()
+    model = SimpNet(128 + 64)
+
+    @tf.function
+    def predict(q, z):
+        return model.call(q, z)
 
     logger.info("Predicting labels")
-    probas = 0
-    for i in range(n_models):
-        h5_path = model_dir / f"s{i}.h5"
+    predictions = np.zeros((len(genes), 5), 'float32')
+    for i in range(10):
+        h5_path = model_dir / f"model-{i}.h5"
         model.load_weights(h5_path)
-        logger.info(f"Loading trained model weights from {h5_path}")
+        for j, g in enumerate(genes):
+            dist = sample_dist(predict, g2v_embeddings[g], n_samples)
+            dist = dist / len(genes)
+            predictions[i] = predictions[i] + dist
 
-        probas += model.predict(X)
-    probas /= n_models
+    # normalise the predictions
+    for i in range(len(genes)):
+        predictions[i] = predictions[i] / predictions[i].sum()
 
     # generate submission
-    my_submission = pd.read_csv(submission_format_path)
-    my_submission = my_submission.iloc[:n_rows]
-    my_submission["sample_id"] = paths_df.index.values
+    submission = {"genes": genes}
+    for i in LABEL_ENCODING:
+        submission[LABEL_ENCODING[i]] = predictions[:, i]
+    submission = pd.DataFrame(submission)
 
-    for i, c in enumerate(my_submission.columns[1:]):
-        my_submission[c] = probas[:, i]
-
-    my_submission.to_csv(submission_save_path, index=False)
-    logger.success(f"Submission saved to {submission_save_path}")
+    submission.to_csv(submission_save_dir / submission_name, index=False)
+    logger.success(f"Submission saved to {submission_save_dir / submission_name}")
 
 
 if __name__ == "__main__":

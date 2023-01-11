@@ -17,7 +17,7 @@ def main(
             "./data/raw/", help="Path to the raw features"
         ),
         embedding_path: Path = typer.Option(
-            "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the raw features"
+            "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
         ),
         n_folds: int = typer.Option(
             10, help="Number of folds, Must be at least 2"
