@@ -8,22 +8,36 @@ from src.g2v import load_embeddings
 from src.training_utils import train_model
 
 
-def validation_subset(conditions):
+def validation_subset(conditions, labels, size=8):
+    subset = []
+    # refine based on number of samples of the perturbation
     v = np.array(conditions)
     v, c = np.unique(v, return_counts=True)
     q25, q75 = np.quantile(c, 0.25), np.quantile(c, 0.75)
-
-    subset = []
     for gene, count in zip(v, c):
         if (q25 < count) and (count < q75):
             subset.append(gene)
+
+    # refine based on distance from the mean proportions
+    dist = []
+    mean = np.array((0.0675, 0.2097, 0.3134, 0.3921, 0.0173), 'float32')
+    for p in subset:
+        y = labels[conditions == p].sum(0)
+        y = y / y.sum()
+        # d = np.abs(y - mean).sum() # l1
+        d = -(mean * np.log(y + 1e-10)).sum()  # neg loglik
+        dist.append(d)
+
+    # select the 'size' farthest number of genes
+    idx = np.argsort(dist)[-size:]
+    subset = [subset[i] for i in idx]
     return subset
 
 
 def batch(iterable, n=1):
-    l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx:min(ndx + n, l)]
+    size = len(iterable)
+    for ndx in range(0, size, n):
+        yield iterable[ndx:min(ndx + n, size)]
 
 
 def main(
@@ -63,7 +77,7 @@ def main(
         features_dir / 'sc_training.h5ad', g2v_embeddings
     )
     unique_perturb = np.array(sorted(conditions.unique()))
-    val_perturbations = validation_subset(conditions)
+    val_perturbations = validation_subset(conditions, Y)
     np.random.shuffle(val_perturbations)
 
     test_batch_size = max(1, len(val_perturbations) // n_folds)
@@ -91,4 +105,3 @@ def main(
 
 if __name__ == "__main__":
     typer.run(main)
-

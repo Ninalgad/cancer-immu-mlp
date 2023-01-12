@@ -5,13 +5,12 @@ Username: jackson6
 
 My solution is an ensemble of ten identical Deep Neural Networks (DNNs) built using tensorflow. 
 
-The final submission was produced by ensembling the models produced by `src/run_kfold_training.py`, which trains on both the `train` and `val` splits specified in `raw/metadata.csv`.
+The final submission was produced by ensembling the models produced by `src/run_training.py`, which trains on both the `train` and `val` splits specified in `raw/metadata.csv`.
 
 # Setup
 
-0. Clone (or unzip) and change the directory
+0. Change the working directory
 ```
-git clone https://github.com/Ninalgad/cancer-immu-mlp.git
 cd cancer-immu-mlp
 ```
 
@@ -65,7 +64,7 @@ cancer-immu-mlp
 │   ├── run_inference.py
 │   ├── model.py
 │   ├── loss.py
-│   ├── run_kfold_training.py
+│   ├── run_training.py
 │   └── training_utils.py
 ├── README.md          <- The top-level README for using this project.
 ├── requirements.txt   <- List of all dependencies
@@ -75,10 +74,10 @@ cancer-immu-mlp
 
 # Run training
 
-To run training: `python src/run_kfold_training.py`. 
+To run training: `python src/run_training.py`. 
 
 ```
-$ python src/run_kfold_training.py --help
+$ python src/run_training.py --help
 ```
 
 
@@ -108,7 +107,7 @@ Both training and inference were run on GPU.
 - Training time: ~ 12 mins
 - Inference time: ~ 10 sec
 
-# Gene2vec
+# Gene2vec Embeddings
 repo: [https://github.com/jingcheng-du/Gene2vec](https://github.com/jingcheng-du/Gene2vec)
 MIT License: [jingcheng-du/Gene2vec/LICENSE](https://github.com/jingcheng-du/Gene2vec/blob/master/LICENSE)
 <p>Gene2vec (Du et al., 2018) is a set of high-dimensional embeddings of human genes, where 
