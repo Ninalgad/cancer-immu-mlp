@@ -14,8 +14,7 @@ def proportion_loss(y, p):
 
 
 def loss_function(tar_y, pred_y, tar_x, pred_x):
-    loss_ = tf.keras.losses.categorical_crossentropy(tar_y, pred_y)
+    loss_ = tf.keras.losses.KLDivergence()(tar_y, pred_y)
     loss_ += tf.keras.losses.mean_absolute_error(tar_x, pred_x)
-    loss_ += proportion_loss(tar_y, pred_y)
     return loss_
 

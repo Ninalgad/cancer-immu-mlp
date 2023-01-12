@@ -61,7 +61,7 @@ def main(
             dist = dist / len(genes)
             predictions[j] = predictions[j] + dist
 
-    # normalise the predictions
+    # normalize the predictions
     for i in range(len(genes)):
         predictions[i] = predictions[i] / predictions[i].sum()
 
