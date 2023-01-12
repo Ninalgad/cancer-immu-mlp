@@ -20,9 +20,6 @@ def main(
         model_dir: Path = typer.Option(
             "./data/processed", help="Directory to save the output model weights"
         ),
-        embedding_path: Path = typer.Option(
-            "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
-        ),
         n_models: int = typer.Option(
             8, help="Number of models to use in the model-dir"
         ),
@@ -36,8 +33,8 @@ def main(
         genes = ['Ets1', 'Fosb', 'Mafk', 'Stat3']
         submission_name = "test_output.csv"
 
-    logger.info(f"Loading embeddings from {embedding_path}")
-    g2v_embeddings = load_embeddings(embedding_path)
+    logger.info(f"Loading embeddings")
+    g2v_embeddings = load_embeddings()
 
     logger.info("Creating model")
     tf.keras.backend.clear_session()

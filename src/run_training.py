@@ -22,9 +22,6 @@ def main(
         features_dir: Path = typer.Option(
             "./data/raw/", help="Path to the raw features"
         ),
-        embedding_path: Path = typer.Option(
-            "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt", help="Path to the Gene2Vec embeddings"
-        ),
         n_folds: int = typer.Option(
             8, help="Number of folds/models, Must be at least 2"
         ),
@@ -44,8 +41,8 @@ def main(
         logger.info("Running in debug mode")
         n_epochs = 1
 
-    logger.info(f"Loading embeddings from {embedding_path}")
-    g2v_embeddings = load_embeddings(embedding_path)
+    logger.info(f"Loading embeddings")
+    g2v_embeddings = load_embeddings()
 
     logger.info(f"Creating dataset from {features_dir}")
     Q, X, Y, conditions = make_dataset(

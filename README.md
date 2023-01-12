@@ -5,12 +5,13 @@ Username: jackson6
 
 My solution is an ensemble of ten identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python.
 The final submission was produced by first training the model models produced by \
-`python src/run_training.py`, then running `python src/run_inference.py` and `python src/run_inference.py --test-mode` to produce the validation and test csv(s) respectively.
+`python src/run_training.py`, then running `python src/run_inference.py` and \
+`python src/run_inference.py --test-mode` to produce the validation and test csv(s) respectively.
 
 
 # Setup
 
-0. Change the working directory
+0. Set the working directory as the 'code' directory
 ```
 cd code
 ```
@@ -36,15 +37,6 @@ pip install -r requirements.txt
 pip install tensorflow-gpu==2.9.2
 ```
 
-3. Download and place the data from the competition page into `data/raw`
-
-
-then download the Gene2vec embeddings with 
-```
-pip install wget
-wget -O data/embeddings/gene2vec_dim_200_iter_9_w2v.txt https://github.com/jingcheng-du/Gene2vec/raw/master/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt
-```
-
 
 The structure of the directory before running training or inference should be:
 ```
@@ -52,7 +44,6 @@ code
 ├── data
 │   ├── processed      <- Output of training & inference
 │   ├── embeddings     <- Gene2vec embeddings
-│   │   └── gene2vec_dim_200_iter_9_w2v.txt
 │   └── raw            <- The original data files
 │       ├── sc_training.h5ad
 │       ├── clone_information.csv

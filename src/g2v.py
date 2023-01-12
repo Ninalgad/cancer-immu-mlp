@@ -1,8 +1,14 @@
 import numpy as np
+import wget
 
 
-def load_embeddings(path):
-    with open(path, 'r') as f:
+G2V_URL = "https://github.com/jingcheng-du/Gene2vec/raw/master/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt"
+EMB_PATH = "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt"
+
+
+def load_embeddings():
+    wget.download(G2V_URL, EMB_PATH)
+    with open(EMB_PATH, 'r') as f:
         lines = f.readlines()[1:]
 
     g2v_embeddings = {}
