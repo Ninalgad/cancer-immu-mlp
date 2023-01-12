@@ -3,15 +3,16 @@ Username: jackson6
 
 ## Summary
 
-My solution is an ensemble of ten identical Deep Neural Networks (DNNs) built using tensorflow. 
+My solution is an ensemble of ten identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python.
+The final submission was produced by first training the model models produced by \
+`python src/run_training.py`, then running `python src/run_inference.py` and `python src/run_inference.py --test-mode` to produce the validation and test csv(s) respectively.
 
-The final submission was produced by ensembling the models produced by `src/run_training.py`, which trains on both the `train` and `val` splits specified in `raw/metadata.csv`.
 
 # Setup
 
 0. Change the working directory
 ```
-cd cancer-immu-mlp
+cd code
 ```
 
 1. Create an environment using Python 3.8. The solution was originally run on Python 3.8.16. 
@@ -40,13 +41,14 @@ pip install tensorflow-gpu==2.9.2
 
 then download the Gene2vec embeddings with 
 ```
+pip install wget
 wget -O data/embeddings/gene2vec_dim_200_iter_9_w2v.txt https://github.com/jingcheng-du/Gene2vec/raw/master/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt
 ```
 
 
 The structure of the directory before running training or inference should be:
 ```
-cancer-immu-mlp
+code
 ├── data
 │   ├── processed      <- Output of training & inference
 │   ├── embeddings     <- Gene2vec embeddings
@@ -76,10 +78,6 @@ cancer-immu-mlp
 
 To run training: `python src/run_training.py`. 
 
-```
-$ python src/run_training.py --help
-```
-
 
 # Run inference
 
@@ -90,10 +88,6 @@ By default, predictions will be saved out to `data/processed/validation_output.c
 To run inference on the TEST genes: `python src/run_inference.py --test-mode` \
 By default, predictions will be saved out to `data/processed/test_output.csv`.
 
-
-```
-$ python src/run_inference.py --help
-```
 
 # Hardware
 
