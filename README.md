@@ -72,6 +72,36 @@ code
 
 To run training: `python src/run_training.py`. 
 
+```commandline
+$python src/run_training.py --help
+Usage: run_training.py [OPTIONS]
+
+Options:
+  --model-dir PATH        Directory to save the
+                          output model weights in
+                          npy format  [default:
+                          ./data/processed]
+
+  --features-dir PATH     Path to the raw features
+                          [default: ./data/raw/]
+
+  --n-folds INTEGER       Number of folds/models,
+                          Must be at least 2
+                          [default: 8]
+
+  --random-state INTEGER  Controls the randomness
+                          of each fold and noise
+                          [default: 758625225]
+
+  --debug / --no-debug    Run on a small subset of
+                          the data and a two folds
+                          for debugging  [default:
+                          False]
+
+  --help                  Show this message and
+                          exit.
+```
+
 
 # Run Inference
 
@@ -83,6 +113,39 @@ To run inference on the TEST genes: `python src/run_inference.py --test-mode` \
 By default, predictions will be saved out to `data/processed/test_output.csv`.
 
 
+```commandline
+$python src/run_training.py --help
+Usage: run_inference.py [OPTIONS]
+
+Options:
+  --test-mode / --no-test-mode  Predict the test
+                                genes, otherwise
+                                predict the
+                                validation genes
+                                [default: False]
+
+  --submission-save-dir PATH    Directory to 
+                                save csv
+                                [default:
+                                ./data/processed]
+
+  --model-dir PATH              Directory to save
+                                the output model
+                                weights  [default:
+                                ./data/processed]
+
+  --n-models INTEGER            Number of models
+                                to use in the
+                                model-dir
+                                [default: 8]
+
+  --n-samples INTEGER           Number of 
+                                generated samples
+                                [default: 1000]
+
+  --help                        Show this message
+                                and exit.
+```
 # Hardware
 
 The solution was run on a Google colab notebook
@@ -92,7 +155,7 @@ The solution was run on a Google colab notebook
 - GPU: Tesla T4
 
 Both training and inference were run on GPU.
-- Training time: ~ 50 mins
+- Training time: ~ 45 mins
 - Inference time: ~ 10 sec
 
 # Gene2vec Embeddings

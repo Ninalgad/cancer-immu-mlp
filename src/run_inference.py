@@ -15,7 +15,7 @@ def main(
             False, help="Predict the test genes, otherwise predict the validation genes"
         ),
         submission_save_dir: Path = typer.Option(
-            "./data/processed", help="Predict the test genes, otherwise predict the validation genes"
+            "./data/processed", help="Directory to save csv"
         ),
         model_dir: Path = typer.Option(
             "./data/processed", help="Directory to save the output model weights"
@@ -24,7 +24,7 @@ def main(
             8, help="Number of models to use in the model-dir"
         ),
         n_samples: int = typer.Option(
-            1000, help="Path to the Gene2Vec embeddings"
+            1000, help="Number of generated samples"
         )
 ):
     genes = ['Aqr', 'Bach2', 'Bhlhe40']
