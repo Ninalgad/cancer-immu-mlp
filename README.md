@@ -3,11 +3,10 @@ Username: jackson6
 
 ## Summary
 
-My solution is an ensemble of ten identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python.
-The final submission was produced by first training the model models produced by \
-`python src/run_training.py`, then running `python src/run_inference.py` and \
-`python src/run_inference.py --test-mode` to produce the validation and test csv(s) respectively.
-
+My solution is an ensemble of ten identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
+To regenerate the submission state proportion files see the "Run Inference" section below. \
+The pretrained weights and Gene2vec (Du et al., 2018) embeddings are included.  \
+To generate new weights see the "Run Training" section below (this will overwrite the included pretrained weights). 
 
 # Setup
 
@@ -42,8 +41,12 @@ The structure of the directory before running training or inference should be:
 ```
 code
 ├── data
-│   ├── processed      <- Output of training & inference
-│   ├── embeddings     <- Gene2vec embeddings
+│   ├── processed      <- Output folder for training & inference
+│   │   ├── model-0.h5
+│   │   ├── model-1.h5
+│   │   ...
+│   ├── embeddings     
+│   │   └──gene2vec_dim_200_iter_9_w2v.txt <- Gene2vec embeddings
 │   └── raw            <- The original data files
 │       ├── sc_training.h5ad
 │       ├── clone_information.csv
@@ -65,12 +68,12 @@ code
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
 ```
 
-# Run training
+# Run Training
 
 To run training: `python src/run_training.py`. 
 
 
-# Run inference
+# Run Inference
 
 To run inference on the VALIDATION genes: `python src/run_inference.py` \
 By default, predictions will be saved out to `data/processed/validation_output.csv`. 
