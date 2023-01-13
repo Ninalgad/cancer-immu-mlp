@@ -3,7 +3,7 @@ Username: jackson6
 
 ## Summary
 
-My solution is an ensemble of ten identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
+My solution is an ensemble of eight identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
 To regenerate the submission state proportion files see the "Run Inference" section below. \
 The pretrained weights and Gene2vec (Du et al., 2018) embeddings are included.  \
 To generate new weights see the "Run Training" section below (this will overwrite the included pretrained weights). 
@@ -92,7 +92,7 @@ The solution was run on a Google colab notebook
 - GPU: Tesla T4
 
 Both training and inference were run on GPU.
-- Training time: ~ 12 mins
+- Training time: ~ 50 mins
 - Inference time: ~ 10 sec
 
 # Gene2vec Embeddings
