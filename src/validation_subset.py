@@ -34,5 +34,6 @@ def validation_subset(conditions, labels, size=8):
     # select the 'size' farthest number of genes
     idx = np.argsort(dist)[-size:]
     subset = [subset[i] for i in idx]
+    subset = [s for s in subset if s.upper() != "ZFP292"]
     return subset
 

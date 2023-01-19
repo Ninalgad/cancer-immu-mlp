@@ -21,7 +21,7 @@ def main(
             "./data/processed", help="Directory to save the output model weights"
         ),
         n_models: int = typer.Option(
-            8, help="Number of models to use in the model-dir"
+            7, help="Number of models to use in the model-dir"
         ),
         n_samples: int = typer.Option(
             1000, help="Number of generated samples"
