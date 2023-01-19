@@ -87,7 +87,17 @@ Options:
 
   --n-folds INTEGER       Number of folds/models,
                           Must be at least 2
-                          [default: 8]
+                          [default: 7]
+
+  --teacher-dim INTEGER   The hidden dimension of
+                          the teacher (NOT used
+                          for inference) MLP
+                          [default: 128]
+
+  --student-dim INTEGER   The hidden dimension of
+                          the student (used for
+                          inference) MLP
+                          [default: 256]
 
   --random-state INTEGER  Controls the randomness
                           of each fold and noise
@@ -124,9 +134,8 @@ Options:
                                 validation genes
                                 [default: False]
 
-  --submission-save-dir PATH    Directory to 
-                                save csv
-                                [default:
+  --submission-save-dir PATH    Directory to save
+                                csv  [default:
                                 ./data/processed]
 
   --model-dir PATH              Directory to save
@@ -137,9 +146,9 @@ Options:
   --n-models INTEGER            Number of models
                                 to use in the
                                 model-dir
-                                [default: 8]
+                                [default: 7]
 
-  --n-samples INTEGER           Number of 
+  --n-samples INTEGER           Number of
                                 generated samples
                                 [default: 1000]
 

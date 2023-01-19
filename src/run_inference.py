@@ -38,7 +38,7 @@ def main(
 
     logger.info("Creating model")
     tf.keras.backend.clear_session()
-    model = SimpNet(128, 256, 256)
+    model = SimpNet(626, 256, 256)
 
     @tf.function
     def predict(q, z):
