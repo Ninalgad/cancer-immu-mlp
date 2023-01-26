@@ -7,7 +7,7 @@ def min_max_scale(x):
     return x
 
 
-def validation_subset(conditions, labels, size=8):
+def validation_subset(conditions, labels, size=12):
     subset = []
     # refine based on number of samples of the perturbation
     v = np.array(conditions)
@@ -34,6 +34,6 @@ def validation_subset(conditions, labels, size=8):
     # select the 'size' farthest number of genes
     idx = np.argsort(dist)[-size:]
     subset = [subset[i] for i in idx]
-    subset = [s for s in subset if s.upper() != "ZFP292"]
+    subset = [s for s in subset if s != "Zfp292"]
     return subset
 

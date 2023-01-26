@@ -5,7 +5,6 @@ Username: jackson6
 
 My solution is an ensemble of eight identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
 To regenerate the submission state proportion files see the "Run Inference" section below. \
-The pretrained weights and Gene2vec (Du et al., 2018) embeddings are included.  \
 To generate new weights see the "Run Training" section below (this will overwrite the included pretrained weights). 
 
 # Setup
@@ -46,7 +45,7 @@ code
 │   │   ├── model-1.h5
 │   │   ...
 │   ├── embeddings     
-│   │   └──gene2vec_dim_200_iter_9_w2v.txt <- Gene2vec embeddings
+│   │   └──g2v.txt <- Genevector embeddings
 │   └── raw            <- The original data files
 │       ├── sc_training.h5ad
 │       ├── clone_information.csv
@@ -124,7 +123,7 @@ By default, predictions will be saved out to `data/processed/test_output.csv`.
 
 
 ```commandline
-$python src/run_training.py --help
+$python src/run_inference.py --help
 Usage: run_inference.py [OPTIONS]
 
 Options:
@@ -166,16 +165,4 @@ The solution was run on a Google colab notebook
 Both training and inference were run on GPU.
 - Training time: ~ 45 mins
 - Inference time: ~ 10 sec
-
-# Gene2vec Embeddings
-repo: [https://github.com/jingcheng-du/Gene2vec](https://github.com/jingcheng-du/Gene2vec)
-MIT License: [jingcheng-du/Gene2vec/LICENSE](https://github.com/jingcheng-du/Gene2vec/blob/master/LICENSE)
-<p>Gene2vec (Du et al., 2018) is a set of high-dimensional embeddings of human genes, where 
-embeddings are closer together if they are often expressed together. Here we feed these embedding alongside random noise
-to a deep neural network.</p>
-
-
---------
-# References:
-Du, J., Jia, P., Dai, Y., Tao, C., Zhao, Z., & Zhi, D. (2018). Gene2vec: distributed representation of genes based on co-expression. BMC Genomics, 20.
 

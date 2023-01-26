@@ -1,24 +1,17 @@
 import numpy as np
-import wget
-import os
+import pickle
 
 
-G2V_URL = "https://github.com/jingcheng-du/Gene2vec/raw/master/pre_trained_emb/gene2vec_dim_200_iter_9_w2v.txt"
-EMB_PATH = "./data/embeddings/gene2vec_dim_200_iter_9_w2v.txt"
+EMB_PATH = "./data/embeddings/g2v.pkl"
 
 
 def load_embeddings():
-    if not os.path.isfile(EMB_PATH):
-        wget.download(G2V_URL, EMB_PATH)
 
-    with open(EMB_PATH, 'r') as f:
-        lines = f.readlines()[1:]
+    with open(EMB_PATH, 'rb') as f:
+        g2v_embeddings = pickle.load(f)
 
-    g2v_embeddings = {}
-    for x in lines:
-        x = x.split(' ')
-        g = x[0].lower()
-        g2v_embeddings[g] = np.asarray(x[1:-1], 'float32')
+    for g in g2v_embeddings:
+        g2v_embeddings[g] = np.array(g2v_embeddings[g], 'float32')
 
     return g2v_embeddings
 

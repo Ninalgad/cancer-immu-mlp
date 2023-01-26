@@ -15,16 +15,16 @@ def main(
             False, help="Predict the test genes, otherwise predict the validation genes"
         ),
         submission_save_dir: Path = typer.Option(
-            "./data/processed", help="Directory to save csv"
+            "./data/processed", help="Predict the test genes, otherwise predict the validation genes"
         ),
         model_dir: Path = typer.Option(
             "./data/processed", help="Directory to save the output model weights"
         ),
         n_models: int = typer.Option(
-            7, help="Number of models to use in the model-dir"
+            4, help="Number of models to use in the model-dir"
         ),
         n_samples: int = typer.Option(
-            1000, help="Number of generated samples"
+            1000, help="Path to the Gene2Vec embeddings"
         )
 ):
     genes = ['Aqr', 'Bach2', 'Bhlhe40']
@@ -38,14 +38,14 @@ def main(
 
     logger.info("Creating model")
     tf.keras.backend.clear_session()
-    model = SimpNet(626, 256, 256)
+    model = SimpNet(256, 300, 300)
 
     @tf.function
     def predict(q, z):
         return model.call(q, z)
 
     # call to 'create' the model
-    model(np.zeros((n_samples, 200), 'float32'),
+    model(np.zeros((n_samples, 128), 'float32'),
           np.zeros((n_samples, 64), 'float32'))
 
     logger.info("Predicting labels")
@@ -54,7 +54,7 @@ def main(
         h5_path = model_dir / f"model-{i}.h5"
         model.load_weights(h5_path)
         for j, g in enumerate(genes):
-            dist = sample_dist(predict, g2v_embeddings[g.lower()], n_samples)
+            dist = sample_dist(predict, g2v_embeddings[g.upper()], n_samples)
             dist = dist / len(genes)
             predictions[j] = predictions[j] + dist
 
@@ -75,3 +75,4 @@ def main(
 
 if __name__ == "__main__":
     typer.run(main)
+
