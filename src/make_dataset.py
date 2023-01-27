@@ -3,7 +3,6 @@ import scanpy as sc
 import tensorflow as tf
 from sklearn.decomposition import PCA
 
-
 LABEL_ENCODING = {
     'progenitor': 0,
     'effector': 1,
@@ -20,7 +19,7 @@ def process_adata(adata, g2v_embeddings):
         if p in g2v_embeddings:
             q = g2v_embeddings[p]
         else:
-            q = np.zeros((128,), 'float32')
+            q = np.zeros((200,), 'float32')
         Q.append(q)
     Q = np.array(Q)
 
@@ -59,4 +58,11 @@ def load_adata(adata_file_path):
     adata = sc.read_h5ad(adata_file_path)
     adata.var_names = [g.upper() for g in adata.var_names]
     return adata
+
+
+def get_gene_subset(h5_files):
+    genes = [load_adata(x).var_names for x in h5_files]
+    genes = [set(x) for x in genes]
+    genes = set.intersection(*genes)
+    return sorted(genes)
 

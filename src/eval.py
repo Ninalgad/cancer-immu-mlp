@@ -26,8 +26,8 @@ def evaluate(predict_func, perturbations_test, condition_test, label_test,
         true_proportions = y / y.sum()
 
         q = np.zeros((200,), 'float32')
-        if p.lower() in g2v_embeddings:
-            q = g2v_embeddings[p.lower()]
+        if p.upper() in g2v_embeddings:
+            q = g2v_embeddings[p.upper()]
         pred_proportions = sample_dist(predict_func, q, 1000)
 
         s = np.abs(pred_proportions - true_proportions).sum()

@@ -21,7 +21,7 @@ def main(
             "./data/processed", help="Directory to save the output model weights"
         ),
         n_models: int = typer.Option(
-            4, help="Number of models to use in the model-dir"
+            5, help="Number of models to use in the model-dir"
         ),
         n_samples: int = typer.Option(
             1000, help="Path to the Gene2Vec embeddings"
@@ -38,14 +38,14 @@ def main(
 
     logger.info("Creating model")
     tf.keras.backend.clear_session()
-    model = SimpNet(256, 300, 300)
+    model = SimpNet(256, 256, 256)
 
     @tf.function
     def predict(q, z):
         return model.call(q, z)
 
     # call to 'create' the model
-    model(np.zeros((n_samples, 128), 'float32'),
+    model(np.zeros((n_samples, 200), 'float32'),
           np.zeros((n_samples, 64), 'float32'))
 
     logger.info("Predicting labels")

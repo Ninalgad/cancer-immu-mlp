@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 import numpy as np
 
-from src.make_dataset import make_dataset
+from src.make_dataset import make_dataset, get_gene_subset
 from src.g2v import load_embeddings
 from src.training_utils import train_model
 from src.validation_subset import validation_subset
@@ -23,10 +23,10 @@ def main(
             "./data/raw/", help="Path to the raw features"
         ),
         n_folds: int = typer.Option(
-            3, help="Number of folds/models, Must be at least 2"
+            5, help="Number of folds/models, Must be at least 2"
         ),
         model_dim: int = typer.Option(
-            300, help="The hidden dimension of the MLP"
+            256, help="The hidden dimension of the teacher (NOT used for inference) MLP"
         ),
         random_state: int = typer.Option(
             758625225, help="Controls the randomness of each fold and noise"
@@ -47,7 +47,7 @@ def main(
 
     logger.info(f"Creating dataset from {features_dir}")
     Q, X, Y, conditions = make_dataset(
-        features_dir / 'sc_training.h5ad', g2v_embeddings
+        features_dir / 'sc_training.h5ad', g2v_embeddings, gene_subset=None
     )
     unique_perturb = np.array(sorted(conditions.unique()))
     val_perturbations = validation_subset(conditions, Y)
@@ -59,7 +59,6 @@ def main(
     scores = []
     logger.info(f"Training {n_folds} models")
     for (i, perturb_test) in enumerate(test_perturb_gen):
-        print('perturb_test', perturb_test)
         perturb_train = [p for p in unique_perturb if p not in perturb_test]
         train_index = np.array([p in perturb_train for p in conditions])
         test_index = np.logical_not(train_index)
@@ -75,10 +74,10 @@ def main(
                                 h5_name=f, batch_size=128, epochs=n_epochs,
                                 learning_rate=1e-5, model_dim=model_dim)
         scores.append(val_score)
-        logger.info(f"Trained model {i}, Validation metric: {val_score}")
+        logger.info(f"Trained model {i}, Validation metric: {val_score}, Validation Genes: {perturb_test}")
 
     logger.info(f"Average Validation metric: {np.mean(scores)}")
-    logger.success(f"Completed Training to {model_dir}")
+    logger.success(f"Completed Training Inference Models to {model_dir}")
 
 
 if __name__ == "__main__":

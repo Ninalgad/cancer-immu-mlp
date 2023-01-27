@@ -7,14 +7,14 @@ def min_max_scale(x):
     return x
 
 
-def validation_subset(conditions, labels, size=12):
+def validation_subset(conditions, labels, size=16):
     subset = []
     # refine based on number of samples of the perturbation
     v = np.array(conditions)
     v, c = np.unique(v, return_counts=True)
-    q25, q75 = np.quantile(c, 0.25), np.quantile(c, 0.75)
+    q25, q90 = np.quantile(c, 0.25), np.quantile(c, 0.90)
     for gene, count in zip(v, c):
-        if (q25 < count) and (count < q75):
+        if (q25 < count) and (count < q90):
             subset.append(gene)
 
     # refine based on distance from the mean proportions

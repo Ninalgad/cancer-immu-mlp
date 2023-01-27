@@ -45,7 +45,7 @@ def train_model(x_train, q_train, y_train,
 
     if pretrained_h5_path != "":
         # call to 'create' the model
-        model(np.zeros((1, 128), 'float32'),
+        model(np.zeros((1, 200), 'float32'),
               np.zeros((1, 64), 'float32'))
         model.load_weights(pretrained_h5_path)
 
