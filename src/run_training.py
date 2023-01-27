@@ -26,7 +26,7 @@ def main(
             5, help="Number of folds/models, Must be at least 2"
         ),
         model_dim: int = typer.Option(
-            256, help="The hidden dimension of the teacher (NOT used for inference) MLP"
+            256, help="The hidden dimension of the model"
         ),
         random_state: int = typer.Option(
             758625225, help="Controls the randomness of each fold and noise"

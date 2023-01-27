@@ -89,9 +89,9 @@ Options:
                           Must be at least 2
                           [default: 5]
 
-  --model-dim INTEGER   The hidden dimension of
-                          the model
-                          [default: 256]
+  --model-dim INTEGER     The hidden dimension of
+                          the model  [default:
+                          256]
 
   --random-state INTEGER  Controls the randomness
                           of each fold and noise
@@ -128,8 +128,11 @@ Options:
                                 validation genes
                                 [default: False]
 
-  --submission-save-dir PATH    Directory to save
-                                csv  [default:
+  --submission-save-dir PATH    Predict the test
+                                genes, otherwise
+                                predict the
+                                validation genes
+                                [default:
                                 ./data/processed]
 
   --model-dir PATH              Directory to save
@@ -142,8 +145,9 @@ Options:
                                 model-dir
                                 [default: 5]
 
-  --n-samples INTEGER           Number of
-                                generated samples
+  --n-samples INTEGER           Path to the
+                                Gene2Vec
+                                embeddings
                                 [default: 1000]
 
   --help                        Show this message
