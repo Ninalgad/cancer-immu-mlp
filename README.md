@@ -1,12 +1,10 @@
-# Cancer Immunotherapy Data Science Grand Challenge - Challenge 1
-Username: jackson6
+
+# Cancer Immunotherapy Data Science Grand Challenge - Challenge 1 (8th Place Solution)
 
 ## Summary
 
 My solution is an ensemble of eight identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
-To regenerate the submission state proportion files see the "Run Inference" section below. \
-The pretrained weights and Gene2vec (Du et al., 2018) embeddings are included. \
-To generate new weights see the "Run Training" section below (this will overwrite the included pretrained weights). 
+After training new weights with "Run Training" section, the submission state proportion files can be regenerated with the "Run Inference" section. Both sections are below. \
 
 # Setup
 
