@@ -3,41 +3,42 @@
 
 ## Summary
 
-My solution is an ensemble of eight identical multi-layer perceptrons (MLPs) built using Tensorflow writen in Python. \
-After training new weights with "Run Training" section, the submission state proportion files can be regenerated with the "Run Inference" section. Both sections are below. \
+My solution is an ensemble of eight identical multi-layer perceptrons (MLPs) built using Tensorflow written in Python. \
+After training new weights with the "Run Training" section, the submission state proportion files can be regenerated with the "Run Inference" section. Both sections are below. \
 
 # Setup
 
-0. Set the working directory as the 'code' directory
-```
+0. Clone and set the working directory as the 'cancer-immu-mlp' directory
+```commandline
+git clone https://github.com/Ninalgad/cancer-immu-mlp.git
 cd code
 ```
 
 1. Create an environment using Python 3.8. The solution was originally run on Python 3.8.16. 
-```
+```commandline
 conda create --name cim-submission python=3.8
 ```
 
 then activate the environment
-```
+```commandline
 conda activate cim-submission
 ```
 
 2. Install the required Python packages:
-```
+```commandline
 pip install -r requirements.txt
 ```
 
 (Optional) for GPU accelerated environments:
 
-```
+```commandline
 pip install tensorflow-gpu==2.9.2
 ```
 
 
 The structure of the directory before running training or inference should be:
 ```
-code
+cancer-immu-mlp
 ├── data
 │   ├── processed      <- Output folder for training & inference
 │   │   ├── model-0.h5
@@ -108,11 +109,11 @@ Options:
 # Run Inference
 
 To run inference on the VALIDATION genes: `python src/run_inference.py` \
-By default, predictions will be saved out to `data/processed/validation_output.csv`. 
+By default, predictions will be saved to `data/processed/validation_output.csv`. 
 
 
 To run inference on the TEST genes: `python src/run_inference.py --test-mode` \
-By default, predictions will be saved out to `data/processed/test_output.csv`.
+By default, predictions will be saved to `data/processed/test_output.csv`.
 
 
 ```commandline
@@ -153,7 +154,7 @@ Options:
 ```
 # Hardware
 
-The solution was run on a Google colab notebook
+The solution was run on a Google Colab notebook
 - Number of CPUs: 4
 - Processor: Intel(R) Xeon(R) CPU @ 2.20GHz
 - Memory: 12 GB 
@@ -166,7 +167,7 @@ Both training and inference were run on GPU.
 # Gene2vec Embeddings
 repo: [https://github.com/jingcheng-du/Gene2vec](https://github.com/jingcheng-du/Gene2vec) MIT License: [jingcheng-du/Gene2vec/LICENSE](jingcheng-du/Gene2vec/LICENSE)
 
-Gene2vec (Du et al., 2018) is a set of high-dimensional embeddings of human genes, where embeddings are closer together if they are often expressed together. Here we feed these embedding alongside random noise to a deep neural network.
+Gene2vec (Du et al., 2018) is a set of high-dimensional embeddings of human genes, where embeddings are closer if they are often expressed together. Here we feed these embeddings alongside random noise to a deep neural network.
 
 # References:
 Du, J., Jia, P., Dai, Y., Tao, C., Zhao, Z., & Zhi, D. (2018). Gene2vec: distributed representation of genes based on co-expression. BMC Genomics, 20.
